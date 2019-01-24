@@ -1,19 +1,8 @@
 package health.servlet;
 
 import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthAggregator;
-import org.springframework.boot.actuate.health.Status;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.annotation.Bean;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import static org.springframework.boot.actuate.health.Status.DOWN;
-import static org.springframework.boot.actuate.health.Status.UP;
 
 @SpringBootApplication
 public class DemoApplication {
