@@ -19,7 +19,7 @@ import static org.springframework.boot.actuate.health.Status.UP;
 public class DemoApplication {
 
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(DemoApplication.class).web(WebApplicationType.SERVLET).run(args);
+		new SpringApplicationBuilder(DemoApplication.class).web(WebApplicationType.REACTIVE).run(args);
 	}
 //
 //	@Bean

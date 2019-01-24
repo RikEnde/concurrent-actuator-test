@@ -4,14 +4,15 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import static health.servlet.conf.Tool.sleep;
 
 @RestController
 public class Controller implements HealthIndicator {
   @GetMapping("/")
-  public String noop() {
-    return "Hello";
+  public Mono<String> noop() {
+    return Mono.fromCallable(() -> "Hello");
   }
 
   @Override
