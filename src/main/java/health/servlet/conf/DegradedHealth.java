@@ -2,10 +2,12 @@ package health.servlet.conf;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.ReactiveHealthIndicator;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import static health.servlet.conf.Tool.sleep;
 
+@Component
 public class DegradedHealth implements ReactiveHealthIndicator {
 
   @Override
