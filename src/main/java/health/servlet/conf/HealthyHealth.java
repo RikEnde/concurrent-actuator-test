@@ -8,9 +8,9 @@ import static health.servlet.conf.Tool.sleep;
 
 @Component
 public class HealthyHealth implements HealthIndicator {
-  @Override
-  public Health health() {
-    long n = sleep(1000, this);
-    return Health.up().withDetail("sleep", n).build();
-  }
+    @Override
+    public Health health() {
+        long n = sleep(1000, this);
+        return Health.up().withDetail("sleep", n).build();
+    }
 }

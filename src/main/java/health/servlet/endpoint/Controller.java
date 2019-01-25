@@ -9,14 +9,14 @@ import static health.servlet.conf.Tool.sleep;
 
 @RestController
 public class Controller implements HealthIndicator {
-  @GetMapping("/")
-  public String noop() {
-    return "Hello";
-  }
+    @GetMapping("/")
+    public String noop() {
+        return "Hello";
+    }
 
-  @Override
-  public Health health() {
-    long n = sleep(1000, this);
-    return Health.up().withDetail("sleep", n).build();
-  }
+    @Override
+    public Health health() {
+        long n = sleep(1000, this);
+        return Health.up().withDetail("sleep", n).build();
+    }
 }

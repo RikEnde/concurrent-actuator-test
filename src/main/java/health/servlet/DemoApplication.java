@@ -18,9 +18,9 @@ import static org.springframework.boot.actuate.health.Status.UP;
 @SpringBootApplication
 public class DemoApplication {
 
-	public static void main(String[] args) {
-		new SpringApplicationBuilder(DemoApplication.class).web(WebApplicationType.SERVLET).run(args);
-	}
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(DemoApplication.class).web(WebApplicationType.SERVLET).run(args);
+    }
 //
 //	@Bean
 //	public HealthAggregator healthAggregator() {
