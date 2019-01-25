@@ -10,14 +10,14 @@ import static health.servlet.conf.Tool.sleep;
 
 @RestController
 public class Controller implements ReactiveHealthIndicator {
-  @GetMapping("/")
-  public Mono<String> noop() {
-    return Mono.fromCallable(() -> "Hello");
-  }
+    @GetMapping("/")
+    public Mono<String> noop() {
+        return Mono.fromCallable(() -> "Hello");
+    }
 
-  @Override
-  public Mono<Health> health() {
-    long n = sleep(1000, this);
-    return Mono.fromCallable(() -> Health.up().withDetail("sleep", n).build());
-  }
+    @Override
+    public Mono<Health> health() {
+        long n = sleep(1000, this);
+        return Mono.fromCallable(() -> Health.up().withDetail("sleep", n).build());
+    }
 }

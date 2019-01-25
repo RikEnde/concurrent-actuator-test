@@ -9,9 +9,9 @@ import static health.servlet.conf.Tool.sleep;
 
 @Component
 public class UnhealthyHealth implements ReactiveHealthIndicator {
-  @Override
-  public Mono<Health> health() {
-    long n = sleep(1000, this);
-    return Mono.fromCallable(() -> Health.down().withDetail("sleep", n).build());
-  }
+    @Override
+    public Mono<Health> health() {
+        long n = sleep(1000, this);
+        return Mono.fromCallable(() -> Health.down().withDetail("sleep", n).build());
+    }
 }
