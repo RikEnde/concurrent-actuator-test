@@ -17,6 +17,7 @@
 package health.servlet.healths;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -55,11 +56,11 @@ public class ConcurrentCompositeHealthIndicator extends CompositeHealthIndicator
         .stream()
         .map((entry) -> new SimpleEntry<>(entry.getKey(),
             this.executor.submit(() -> entry.getValue().health())))
-        .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
+        .collect(LinkedHashMap::new, (map, e) -> map.put(e.getKey(), e.getValue()), Map::putAll);
 
     Map<String, Health> healths = futureHealths.entrySet().stream()
         .map((entry) -> new SimpleEntry<>(entry.getKey(), get(entry.getValue())))
-        .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
+        .collect(LinkedHashMap::new, (map, e) -> map.put(e.getKey(), e.getValue()), Map::putAll);
 
     return this.aggregator.aggregate(healths);
   }
