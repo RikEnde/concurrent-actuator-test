@@ -16,6 +16,7 @@
 
 package health.servlet.healths;
 
+import java.time.Duration;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,11 +24,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
 import org.springframework.boot.actuate.health.CompositeHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthAggregator;
+import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.actuate.health.HealthIndicatorRegistry;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -39,15 +40,40 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  */
 public class ConcurrentCompositeHealthIndicator extends CompositeHealthIndicator {
 
+  private static final Duration DEFAULT_TIMEOUT = Duration.ofMillis(30000);
+
   private final ThreadPoolTaskExecutor executor;
 
-  private final HealthAggregator aggregator;
+  private final Duration timeout;
 
+  /**
+   * Create a new {@link org.springframework.boot.actuate.health.ConcurrentCompositeHealthIndicator} from the indicators in the
+   * given {@code registry} and provide a ThreadPoolTaskExecutor to submit the
+   * HealthIndicators to, with a default time-out of 30 seconds.
+   * @param healthAggregator the health aggregator
+   * @param registry the registry of {@link HealthIndicator HealthIndicators}.
+   * @param executor the {@link ThreadPoolTaskExecutor} to submit HealthIndicators on
+   */
   public ConcurrentCompositeHealthIndicator(HealthAggregator healthAggregator,
                                             HealthIndicatorRegistry registry, ThreadPoolTaskExecutor executor) {
+    this(healthAggregator, registry, executor, DEFAULT_TIMEOUT);
+  }
+
+  /**
+   * Create a new {@link org.springframework.boot.actuate.health.ConcurrentCompositeHealthIndicator} from the indicators in the
+   * given {@code registry} and provide a ThreadPoolTaskExecutor for submitting the
+   * health checks.
+   * @param healthAggregator the health aggregator
+   * @param registry the registry of {@link HealthIndicator HealthIndicators}.
+   * @param executor the {@link ThreadPoolTaskExecutor} to submit HealthIndicators on
+   * @param timeout the maximum time to wait for a HealthIndicator to complete
+   */
+  public ConcurrentCompositeHealthIndicator(HealthAggregator healthAggregator,
+                                            HealthIndicatorRegistry registry, ThreadPoolTaskExecutor executor,
+                                            Duration timeout) {
     super(healthAggregator, registry);
     this.executor = executor;
-    this.aggregator = healthAggregator;
+    this.timeout = timeout;
   }
 
   @Override
@@ -56,21 +82,28 @@ public class ConcurrentCompositeHealthIndicator extends CompositeHealthIndicator
         .stream()
         .map((entry) -> new SimpleEntry<>(entry.getKey(),
             this.executor.submit(() -> entry.getValue().health())))
-        .collect(LinkedHashMap::new, (map, e) -> map.put(e.getKey(), e.getValue()), Map::putAll);
+        .collect(LinkedHashMap::new,
+            (map, entry) -> map.put(entry.getKey(), entry.getValue()), Map::putAll);
 
     Map<String, Health> healths = futureHealths.entrySet().stream()
         .map((entry) -> new SimpleEntry<>(entry.getKey(), get(entry.getValue())))
-        .collect(LinkedHashMap::new, (map, e) -> map.put(e.getKey(), e.getValue()), Map::putAll);
+        .collect(LinkedHashMap::new,
+            (map, entry) -> map.put(entry.getKey(), entry.getValue()), Map::putAll);
 
-    return this.aggregator.aggregate(healths);
+    return getAggregator().aggregate(healths);
   }
 
   private Health get(Future<Health> entry) {
     try {
-      return entry.get(5000, TimeUnit.MILLISECONDS);
+      return entry.get(this.timeout.toNanos(), TimeUnit.NANOSECONDS);
     }
-    catch (TimeoutException | InterruptedException | ExecutionException ex) {
-      return Health.down().withException(ex).build();
+    catch (InterruptedException | ExecutionException ex) {
+      return Health.down().withException(new IllegalStateException(
+          "Health check did not compete successfully", ex)).build();
+    }
+    catch (TimeoutException ex) {
+      return Health.down().withException(new IllegalStateException(
+          "Health check timed out after " + timeout, ex)).build();
     }
   }
 
