@@ -1,0 +1,1 @@
+{"status":"DOWN","details":{"controller":{"status":"UP","details":{"sleep":1000}},"badHealth":{"status":"DOWN","details":{"sleep":1000}},"goodHealth":{"status":"UP","details":{"sleep":1000}},"healthyHealth":{"status":"UP","details":{"sleep":1000}},"unhealthyHealth":{"status":"DOWN","details":{"sleep":1000}}}}

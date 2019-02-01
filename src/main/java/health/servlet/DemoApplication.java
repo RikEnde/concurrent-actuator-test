@@ -26,7 +26,7 @@ public class DemoApplication {
                                          ThreadPoolTaskExecutor executor
                                          ) {
         return new HealthEndpoint(
-            new ConcurrentCompositeHealthIndicator(healthAggregator, registry, executor, Duration.ofMillis(5000)));
+            new ConcurrentCompositeHealthIndicator(healthAggregator, registry, executor, Duration.ofMillis(0)));
     }
 }
 
