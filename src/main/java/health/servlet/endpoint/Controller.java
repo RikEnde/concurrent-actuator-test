@@ -5,7 +5,7 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static health.servlet.conf.Tool.sleep;
+import static health.servlet.healths.Tool.sleep;
 
 @RestController
 public class Controller implements HealthIndicator {

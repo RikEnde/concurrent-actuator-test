@@ -1,9 +1,9 @@
-package health.servlet.conf;
+package health.servlet.healths;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 
-import static health.servlet.conf.Tool.sleep;
+import static health.servlet.healths.Tool.sleep;
 
 public class DegradedHealth implements HealthIndicator {
 

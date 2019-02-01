@@ -1,19 +1,14 @@
 package health.servlet;
 
+import health.servlet.healths.ConcurrentCompositeHealthIndicator;
 import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthAggregator;
-import org.springframework.boot.actuate.health.Status;
+import org.springframework.boot.actuate.health.HealthEndpoint;
+import org.springframework.boot.actuate.health.HealthIndicatorRegistry;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import static org.springframework.boot.actuate.health.Status.DOWN;
-import static org.springframework.boot.actuate.health.Status.UP;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -21,26 +16,14 @@ public class DemoApplication {
     public static void main(String[] args) {
         new SpringApplicationBuilder(DemoApplication.class).web(WebApplicationType.SERVLET).run(args);
     }
-//
-//	@Bean
-//	public HealthAggregator healthAggregator() {
-//		return healths -> {
-//			long t0 = System.currentTimeMillis();
-//			Health.Builder builder = new Health.Builder();
-//			Set<Status> statusMap = new HashSet<>();
-//			healths.forEach((key, health) -> {
-//				statusMap.add(health.getStatus());
-//				builder.withDetail(key, health);
-//			});
-//			if (statusMap.contains(UP) && statusMap.size() == 1) {
-//				builder.status(UP);
-//			} else {
-//				builder.status(DOWN);
-//			}
-//			long t1 = System.currentTimeMillis();
-//			System.err.printf("Aggregated healths in %d\n", t1 - t0);
-//			return builder.build();
-//		};
-//	}
+
+    @Bean
+    public HealthEndpoint healthEndpoint(HealthAggregator healthAggregator,
+                                         HealthIndicatorRegistry registry,
+                                         ThreadPoolTaskExecutor executor
+                                         ) {
+        return new HealthEndpoint(
+            new ConcurrentCompositeHealthIndicator(healthAggregator, registry, executor));
+    }
 }
 

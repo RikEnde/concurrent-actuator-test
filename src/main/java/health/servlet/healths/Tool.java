@@ -1,4 +1,4 @@
-package health.servlet.conf;
+package health.servlet.healths;
 
 import java.time.LocalDateTime;
 import java.util.Random;
