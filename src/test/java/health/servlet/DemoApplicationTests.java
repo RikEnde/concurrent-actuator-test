@@ -45,7 +45,10 @@ public class DemoApplicationTests {
     long t0 = System.currentTimeMillis();
     this.mockMvc.perform(get("/actuator/health"))
         .andDo(print())
-        .andExpect(status().isServiceUnavailable());
+        .andExpect(status().isServiceUnavailable())
+        .andExpect(content().string("{\"status\":\"DOWN\",\"details\":{\"controller\":{\"status\":\"UP\",\"details\":{\"sleep\":1000}},\"badHealth\":{\"status\":\"DOWN\",\"details\":{\"sleep\":1000}},\"goodHealth\":{\"status\":\"UP\",\"details\":{\"sleep\":1000}},\"healthyHealth\":{\"status\":\"UP\",\"details\":{\"sleep\":1000}},\"unhealthyHealth\":{\"status\":\"DOWN\",\"details\":{\"sleep\":1000}}}}"));
+
+    ;
     long t1 = System.currentTimeMillis();
     assertThat(t1 - t0).isLessThan(indicatorList.size() * 1000);
 

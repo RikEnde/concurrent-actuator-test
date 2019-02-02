@@ -26,7 +26,16 @@ public class DemoApplication {
                                          ThreadPoolTaskExecutor executor
                                          ) {
         return new HealthEndpoint(
-            new ConcurrentCompositeHealthIndicator(healthAggregator, registry, executor, Duration.ofMillis(0)));
+            new ConcurrentCompositeHealthIndicator(healthAggregator, registry, executor, Duration.ofMillis(1100)));
     }
+
+//    @Bean
+//    public HealthEndpoint healthEndpointNoTimeout(HealthAggregator healthAggregator,
+//                                         HealthIndicatorRegistry registry,
+//                                         ThreadPoolTaskExecutor executor
+//    ) {
+//        return new HealthEndpoint(
+//                new ConcurrentCompositeHealthIndicator(healthAggregator, registry, executor));
+//    }
 }
 
