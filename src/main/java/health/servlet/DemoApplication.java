@@ -34,25 +34,17 @@ public class DemoApplication {
             long t1 = System.currentTimeMillis();
             System.err.printf("Took %d to run on %s\n", t1 - t0, Thread.currentThread().getName());
         });
-      return executor;
+        return executor;
     }
 
     @Bean
     public HealthEndpoint healthEndpoint(HealthAggregator healthAggregator,
                                          HealthIndicatorRegistry registry,
                                          ThreadPoolTaskExecutor executor
-                                         ) {
+    ) {
         return new HealthEndpoint(
-            new ConcurrentCompositeHealthIndicator(healthAggregator, registry, executor, Duration.ofMillis(1100)));
+                new ConcurrentCompositeHealthIndicator(healthAggregator, registry, executor, Duration.ofMillis(1100)));
     }
 
-//    @Bean
-//    public HealthEndpoint healthEndpointNoTimeout(HealthAggregator healthAggregator,
-//                                         HealthIndicatorRegistry registry,
-//                                         ThreadPoolTaskExecutor executor
-//    ) {
-//        return new HealthEndpoint(
-//                new ConcurrentCompositeHealthIndicator(healthAggregator, registry, executor));
-//    }
 }
 

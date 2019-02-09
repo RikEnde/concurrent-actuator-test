@@ -22,38 +22,38 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class DemoApplicationTests {
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired
-  List<HealthIndicator> indicatorList;
+    @Autowired
+    List<HealthIndicator> indicatorList;
 
-  @Autowired
-  ThreadPoolTaskExecutor pool;
+    @Autowired
+    ThreadPoolTaskExecutor pool;
 
-  @Test
-  public void hello() throws Exception {
-    this.mockMvc.perform(get("/"))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().string("Hello"));
-    ;
-  }
+    @Test
+    public void outputIsIdenticalToCompositeHealthIndicator() throws Exception {
+        this.mockMvc.perform(get("/actuator/health"))
+                .andDo(print())
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(content().string("{\"status\":\"DOWN\",\"details\":{\"controller\":{\"status\":\"UP\",\"details\":{\"sleep\":1000}},\"badHealth\":{\"status\":\"DOWN\",\"details\":{\"sleep\":1000}},\"goodHealth\":{\"status\":\"UP\",\"details\":{\"sleep\":1000}},\"healthyHealth\":{\"status\":\"UP\",\"details\":{\"sleep\":1000}},\"unhealthyHealth\":{\"status\":\"DOWN\",\"details\":{\"sleep\":1000}}}}"));
 
-  @Test
-  public void runsFasterThanAggregateOfAllIndicators() throws Exception {
-    long t0 = System.currentTimeMillis();
-    this.mockMvc.perform(get("/actuator/health"))
-        .andDo(print())
-        .andExpect(status().isServiceUnavailable())
-        .andExpect(content().string("{\"status\":\"DOWN\",\"details\":{\"controller\":{\"status\":\"UP\",\"details\":{\"sleep\":1000}},\"badHealth\":{\"status\":\"DOWN\",\"details\":{\"sleep\":1000}},\"goodHealth\":{\"status\":\"UP\",\"details\":{\"sleep\":1000}},\"healthyHealth\":{\"status\":\"UP\",\"details\":{\"sleep\":1000}},\"unhealthyHealth\":{\"status\":\"DOWN\",\"details\":{\"sleep\":1000}}}}"));
+        ;
+    }
 
-    ;
-    long t1 = System.currentTimeMillis();
-    assertThat(t1 - t0).isLessThan(indicatorList.size() * 1000);
+    @Test
+    public void runsFasterThanAggregateOfAllIndicators() throws Exception {
+        long t0 = System.currentTimeMillis();
+        this.mockMvc.perform(get("/actuator/health"))
+                .andDo(print())
+                .andExpect(status().isServiceUnavailable())
 
-    System.err.printf("Took %d ms\n", t1 - t0);
-  }
+        ;
+        long t1 = System.currentTimeMillis();
+        assertThat(t1 - t0).isLessThan(indicatorList.size() * 1000);
+
+        System.err.printf("Took %d ms\n", t1 - t0);
+    }
 
 }
 
