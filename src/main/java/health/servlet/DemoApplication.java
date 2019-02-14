@@ -1,9 +1,9 @@
 package health.servlet;
 
-//import health.servlet.healths.ConcurrentCompositeHealthIndicator;
+import health.servlet.healths.ConcurrentCompositeHealthIndicator;
 
 import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.actuate.health.ConcurrentCompositeHealthIndicator;
+//import org.springframework.boot.actuate.health.ConcurrentCompositeHealthIndicator;
 import org.springframework.boot.actuate.health.HealthAggregator;
 import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.boot.actuate.health.HealthIndicatorRegistry;
