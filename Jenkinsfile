@@ -5,13 +5,19 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh 'mvn clean package'
+                sh 'mvn clean package -DskipTests'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
                 sh 'mvn test'
+            }
+        }
+        stage('Integration') {
+            steps {
+                echo 'Running integration tests...'
+                sh 'mvn integration-test'
             }
         }
         stage('Deploy') {
