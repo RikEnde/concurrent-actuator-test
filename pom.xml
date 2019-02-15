@@ -52,6 +52,7 @@
                 <configuration>
                     <skip>true</skip>
                     <trimStackTrace>false</trimStackTrace>
+                    <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
                 </configuration>
                 <executions>
                     <execution>
