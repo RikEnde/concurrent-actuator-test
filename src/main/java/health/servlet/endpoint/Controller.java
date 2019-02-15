@@ -5,6 +5,7 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static health.servlet.healths.Tool.SLEEPY_TIME;
 import static health.servlet.healths.Tool.sleep;
 
 @RestController
@@ -16,7 +17,7 @@ public class Controller implements HealthIndicator {
 
     @Override
     public Health health() {
-        long n = sleep(1000, this);
+        long n = sleep(SLEEPY_TIME, this);
         return Health.up().withDetail("sleep", n).build();
     }
 }
