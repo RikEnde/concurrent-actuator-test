@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 public class Tool {
-    public static long SLEEPY_TIME = 100;
+    public static long SLEEPY_TIME = 1000;
 
     public static long sleep(long n, Object caller) {
         System.out.printf("%s - Start sleeping for %s on behalf of %s\n", LocalDateTime.now(), n, caller.getClass().getName());

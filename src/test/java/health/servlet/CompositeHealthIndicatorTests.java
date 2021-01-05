@@ -5,22 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.health.CompositeHealthIndicator;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthAggregator;
-import org.springframework.boot.actuate.health.HealthEndpoint;
-import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.actuate.health.HealthIndicatorRegistry;
-import org.springframework.boot.actuate.health.Status;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.actuate.health.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Duration;
 import java.util.List;
@@ -29,10 +17,6 @@ import java.util.Map;
 import static health.servlet.healths.Tool.SLEEPY_TIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.actuate.health.Status.DOWN;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -93,7 +77,7 @@ public class CompositeHealthIndicatorTests {
     @Test
     public void outputIsIdenticalToCompositeHealthIndicator() throws Exception {
         Health sequential = sequentialEndpoint.health();
-        Health concurrent = sequentialEndpoint.health();
+        Health concurrent = concurrentEndpoint.health();
         assertThat(sequential).isEqualTo(concurrent);
 
         System.out.printf("Sequential %s\nConcurrent %s\n", sequential, concurrent);
